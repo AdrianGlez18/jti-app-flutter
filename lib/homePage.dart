@@ -9,14 +9,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentTab = 0;
-
-  List<Widget> _pages = [
-    HomePage(),
-    GeneratePage(),
-    ScanPage(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

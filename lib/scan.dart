@@ -66,23 +66,23 @@ class _ScanPageState extends State<ScanPage> {
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                          title: Text("Se ha obtenido el siguiente"),
-                          content: Text(qrCodeResult),
+                          title: Text("Se ha obtenido el siguiente perfil"),
+                          content: Text(qrCodeResult.split("|||")[0]),
                           actions: <Widget>[
                             FlatButton(
-                              child: Text("Guardar como Portfolio"),
+                              child: Text("Guardar"),
                               onPressed: () {
-                                storeUserData("portfolio", qrCodeResult);
+                                storeUserData(qrCodeResult);
                                 Navigator.pop(context);
                               },
                             ),
-                            FlatButton(
+                            /*FlatButton(
                               child: Text("Guardar como Linkedin"),
                               onPressed: () {
                                 storeUserData("linkedin", qrCodeResult);
                                 Navigator.pop(context);
                               },
-                            ),
+                            ),*/
                             FlatButton(
                               child: Text("Descartar"),
                               onPressed: () {
@@ -118,7 +118,7 @@ class _ScanPageState extends State<ScanPage> {
   //its quite simple as that you can use try and catch staatements too for platform exception
 }
 
-void storeUserData(String infotype, String profile) async {
+/*void storeUserData(String infotype, String profile) async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
   List<String> userdata;
@@ -133,9 +133,29 @@ void storeUserData(String infotype, String profile) async {
 
   userdata = _getList() ?? [];
 
-  String toStore = infotype + ":" + profile;
+  String toStore = infotype + "|||" + profile;
 
   userdata.add(toStore);
+
+  _saveList();
+}*/
+
+void storeUserData(String profile) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  List<String> userdata;
+
+  Future<bool> _saveList() async {
+    return await prefs.setStringList("key", userdata);
+  }
+
+  List<String> _getList() {
+    return prefs.getStringList("key");
+  }
+
+  userdata = _getList() ?? [];
+
+  userdata.add(profile);
 
   _saveList();
 }
