@@ -3,6 +3,7 @@ import 'package:qrcode/homePage.dart';
 import 'package:qrcode/generate.dart';
 import 'package:qrcode/contacts.dart';
 import 'package:qrcode/scan.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -32,6 +33,7 @@ class _MyAppState extends State<MyApp> {
       appBar: AppBar(
         title: Text("JTI APP"),
         centerTitle: true,
+        backgroundColor: Color(0xff633CAE),
       ),
       body: _pages[_currentTab],
       bottomNavigationBar: BottomNavigationBar(
@@ -40,19 +42,17 @@ class _MyAppState extends State<MyApp> {
             _currentTab = index;
           });
         },
-        type: BottomNavigationBarType.fixed, 
-        backgroundColor: Colors.black, 
-        selectedItemColor: Colors.greenAccent,
-        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Color(0xff633CAE),
+        selectedItemColor: Color(0xff83DEFF),
+        unselectedItemColor: Colors.white,
         currentIndex: _currentTab,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.supervised_user_circle_outlined),
-              label: "Generar QR"),
+              icon: FaIcon(FontAwesomeIcons.qrcode), label: "Generar QR"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.supervised_user_circle_outlined),
-              label: "Leer QR"),
+              icon: FaIcon(FontAwesomeIcons.cameraRetro), label: "Leer QR"),
           BottomNavigationBarItem(
               icon: Icon(Icons.supervised_user_circle_outlined),
               label: "Contactos"),

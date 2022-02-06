@@ -1,10 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:qrcode/scan.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
+
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class ContactsPage extends StatefulWidget {
   @override
@@ -23,8 +24,21 @@ class _ContactsPageState extends State<ContactsPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Image(image: AssetImage('images/logo.png')),
-            Text("Lista de Contactos"),
+            Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Image(image: AssetImage('images/logo.png')),
+            ),
+            Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Text(
+                'Lista de Contactos',
+                style: TextStyle(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
             FutureBuilder<List<String>>(
               future: getUserData(),
               builder: (_, snapshot) {
@@ -41,6 +55,24 @@ class _ContactsPageState extends State<ContactsPage> {
                 // embeddedImage: AssetImage('assets/logo.png'),
               },
             ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: FlatButton(
+                padding: EdgeInsets.all(15.0),
+                onPressed: () async {
+                  log("Pressed");
+                },
+                child: Text(
+                  "Exportar Listado a PDF",
+                  style: TextStyle(
+                      color: Colors.blue, fontWeight: FontWeight.bold),
+                ),
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.blue, width: 3.0),
+                    borderRadius: BorderRadius.circular(20.0)),
+              ),
+            ),
+
             //flatButton("Generate QR CODE", GeneratePage()),
           ],
         ),
@@ -117,51 +149,133 @@ List<Widget> generateList(List<String> rawData) {
     //log(rawData[i]);
     //log(UserProfile(rawData[i]).linkedin);
     list.add(new Card(
+      color: Color(0xffFF645F),
       child: Column(children: <Widget>[
         Container(
-          height: 150,
+          height: 220,
           width: 350,
-          color: Color(0xFF645F),
+          color: Color(0xffFF645F),
           child: Column(
             children: <Widget>[
-              Text(
-                profile.name,
-                style: TextStyle(fontSize: 20.0),
+              Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                            profile.name,
+                            style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+              Center(
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 50.0, right: 15.0),
+                      child: FaIcon(FontAwesomeIcons.linkedin,
+                          color: Colors.white),
+                    ),
+                    Text(
+                      () {
+                        if (profile.linkedin.length > 25) {
+                          return profile.linkedin.substring(0, 25) + "...";
+                        } else {
+                          return profile.linkedin;
+                        }
+                      }(),
+                      style: TextStyle(fontSize: 15.0, color: Colors.white),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5.0, right: 15.0),
+                      child: IconButton(
+                          icon: const Icon(Icons.copy, color: Colors.white),
+                          onPressed: () {
+                            Clipboard.setData(
+                                ClipboardData(text: profile.linkedin));
+                          }),
+                    ),
+                  ],
+                ),
+              ),
+              Center(
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 50.0, right: 15.0),
+                      child:
+                          FaIcon(FontAwesomeIcons.github, color: Colors.white),
+                    ),
+                    Text(
+                      () {
+                        if (profile.github.length > 25) {
+                          return profile.github.substring(0, 25) + "...";
+                        } else {
+                          return profile.github;
+                        }
+                      }(),
+                      style: TextStyle(fontSize: 15.0, color: Colors.white),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 50.0, right: 15.0),
+                      child: IconButton(
+                          icon: const Icon(Icons.copy, color: Colors.white),
+                          onPressed: () {
+                            Clipboard.setData(
+                                ClipboardData(text: profile.github));
+                          }),
+                    ),
+                  ],
+                ),
+              ),
+              Center(
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 50.0, right: 15.0),
+                      child: FaIcon(FontAwesomeIcons.link, color: Colors.white),
+                    ),
+                    Text(
+                      () {
+                        if (profile.web.length > 25) {
+                          return profile.web.substring(0, 25) + "...";
+                        } else {
+                          return profile.web;
+                        }
+                      }(),
+                      style: TextStyle(fontSize: 15.0, color: Colors.white),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 160.0, right: 15.0),
+                      child: IconButton(
+                          icon: const Icon(Icons.copy, color: Colors.white),
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(text: profile.web));
+                          }),
+                    ),
+                  ],
+                ),
               ),
               /*Text(
                 profile.linkedin.substring(0, 15) ?? "No disponible",
                 style: TextStyle(fontSize: 20.0),
               ),*/
-              Text(
-                () {
-                  if (profile.linkedin.length > 25) {
-                    return profile.linkedin.substring(0, 25) + "...";
-                  } else {
-                    return profile.linkedin;
-                  }
-                }(),
-                style: TextStyle(fontSize: 20.0),
-              ),
-              Text(
-                () {
-                  if (profile.github.length > 25) {
-                    return profile.github.substring(0, 25) + "...";
-                  } else {
-                    return profile.github;
-                  }
-                }(),
-                style: TextStyle(fontSize: 20.0),
-              ),
-              Text(
-                () {
-                  if (profile.web.length > 25) {
-                    return profile.web.substring(0, 25) + "...";
-                  } else {
-                    return profile.web;
-                  }
-                }(),
-                style: TextStyle(fontSize: 20.0),
-              ),
             ],
           ),
         )
@@ -250,44 +364,41 @@ class UserProfile {
   }
 }
 
-class ProfileCard extends StatelessWidget {
+/*class ProfileCard extends StatelessWidget {
   final UserProfile profile;
   ProfileCard(this.profile);
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(children: <Widget>[
-        Container(
-          height: 150,
-          width: 350,
-          color: Color(0xFF645F),
-          child: Column(
-            children: <Widget>[
-              Text(
-                profile.name,
-                style: TextStyle(fontSize: 20.0),
-              ),
-              Text(
-                profile.linkedin.substring(0, 15),
-                style: TextStyle(fontSize: 20.0),
-              ),
-              Text(
-                profile.github.substring(0, 15),
-                style: TextStyle(fontSize: 20.0),
-              ),
-              Text(
-                profile.web.substring(0, 15),
-                style: TextStyle(fontSize: 20.0),
-              ),
-            ],
+        child: Container(
+      height: 150,
+      width: 350,
+      color: Color(0xFF645F),
+      child: Column(
+        children: <Widget>[
+          Text(
+            profile.name,
+            style: TextStyle(fontSize: 20.0),
           ),
-        )
-      ]),
-    );
+          Text(
+            profile.linkedin.substring(0, 15),
+            style: TextStyle(fontSize: 20.0),
+          ),
+          Text(
+            profile.github.substring(0, 15),
+            style: TextStyle(fontSize: 20.0),
+          ),
+          Text(
+            profile.web.substring(0, 15),
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ],
+      ),
+    ));
   }
-}
+}*/
 
-class ProfileList extends StatefulWidget {
+/*class ProfileList extends StatefulWidget {
   @override
   _ProfileListState createState() => _ProfileListState();
 }
@@ -314,3 +425,4 @@ class _ProfileListState extends State<ProfileList> {
     );
   }
 }
+*/

@@ -8,7 +8,7 @@ class ScanPage extends StatefulWidget {
 }
 
 class _ScanPageState extends State<ScanPage> {
-  String qrCodeResult = "Not Yet Scanned";
+  String qrCodeResult = "Aún no se ha escaneado nada";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,12 +19,12 @@ class _ScanPageState extends State<ScanPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
-              "Result",
+              "Último perfil escaneado:",
               style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             Text(
-              qrCodeResult,
+              qrCodeResult.split("|||")[0],
               style: TextStyle(
                 fontSize: 20.0,
               ),
@@ -43,55 +43,38 @@ class _ScanPageState extends State<ScanPage> {
                       codeSanner.rawContent ?? "No se ha leído el QR";
                 });
 
-                /*AlertDialog(
-                  title: Text("Se ha obtenido el siguiente"),
-                  content: Text(qrCodeResult),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text("Guardar Linkedin"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    FlatButton(
-                      child: Text("Descartar"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                  elevation: 20
-                );*/
-
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: Text("Se ha obtenido el siguiente perfil"),
-                          content: Text(qrCodeResult.split("|||")[0]),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text("Guardar"),
-                              onPressed: () {
-                                storeUserData(qrCodeResult);
-                                Navigator.pop(context);
-                              },
-                            ),
-                            /*FlatButton(
+                if (qrCodeResult != "No se ha leído el QR" &&
+                    qrCodeResult != "") {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text("Se ha obtenido el siguiente perfil"),
+                            content: Text(qrCodeResult.split("|||")[0]),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text("Guardar"),
+                                onPressed: () {
+                                  storeUserData(qrCodeResult);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              /*FlatButton(
                               child: Text("Guardar como Linkedin"),
                               onPressed: () {
                                 storeUserData("linkedin", qrCodeResult);
                                 Navigator.pop(context);
                               },
                             ),*/
-                            FlatButton(
-                              child: Text("Descartar"),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            )
-                          ],
-                          elevation: 20,
-                        ));
+                              FlatButton(
+                                child: Text("Descartar"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                            elevation: 20,
+                          ));
+                }
 
                 // try{
                 //   BarcodeScanner.scan()    this method is used to scan the QR code

@@ -33,6 +33,7 @@ dependencies:
   webview_flutter: ^0.3.3
   shared_preferences: ^2.0.12
   font_awesome_flutter: ^9.2.0
+  syncfusion_flutter_pdf: ^19.4.48-beta
 
 dev_dependencies:
   flutter_test:
