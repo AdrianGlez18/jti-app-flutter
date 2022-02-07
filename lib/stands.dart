@@ -63,7 +63,8 @@ class _StandsPageState extends State<StandsPage> {
           textAlign: TextAlign.center),
       IconButton(
         icon: const Icon(Icons.arrow_circle_right),
-        tooltip: 'Increase volume by 10',
+        tooltip: 'Mostrar día siguiente',
+        color: Color(0xffFF645F),
         onPressed: () {
           setState(() {
             Day = !Day;
@@ -77,7 +78,8 @@ class _StandsPageState extends State<StandsPage> {
     return [
       IconButton(
         icon: const Icon(Icons.arrow_circle_left),
-        tooltip: 'Increase volume by 10',
+        tooltip: 'Mostrar día anterior',
+        color: Color(0xffFF645F),
         onPressed: () {
           setState(() {
             Day = !Day;
@@ -598,7 +600,6 @@ Widget TableMartes() {
 Widget TableMiercoles() {
   return Table(border: TableBorder.all(color: Color(0xffFF645F)), children: [
     TableRow(children: [
-      //Column(children: [
       TableCell(
         verticalAlignment: TableCellVerticalAlignment.middle,
         child: Padding(
@@ -607,8 +608,6 @@ Widget TableMiercoles() {
               style: TextStyle(fontSize: 20.0), textAlign: TextAlign.center),
         ),
       ),
-      //]),
-      //Column(children: [
       TableCell(
         verticalAlignment: TableCellVerticalAlignment.middle,
         child: Padding(
@@ -617,7 +616,6 @@ Widget TableMiercoles() {
               style: TextStyle(fontSize: 20.0), textAlign: TextAlign.center),
         ),
       ),
-      //]),
     ]),
     TableRow(children: [
       //Column(children: [
