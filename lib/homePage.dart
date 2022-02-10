@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qrcode/web.dart';
 import 'web_view_container.dart';
 import 'package:qrcode/stands.dart';
+import 'package:qrcode/ponencias.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,6 +27,7 @@ class _HomePageState extends State<HomePage> {
                     "https://media.istockphoto.com/vectors/qr-code-scan-phone-icon-in-comic-style-scanner-in-smartphone-vector-vector-id1166145556")),
             flatButton("Visita nuestra web", WebPage()),
             standButton("Distribución de Stands"),
+            ponenciaButton("Lista de Ponencias"),
             SizedBox(
               height: 20.0,
             ),
@@ -60,6 +62,23 @@ class _HomePageState extends State<HomePage> {
       onPressed: () async {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => StandsPage()));
+      },
+      child: Text(
+        text,
+        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+      ),
+      shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.blue, width: 3.0),
+          borderRadius: BorderRadius.circular(20.0)),
+    );
+  }
+
+  Widget ponenciaButton(String text) {
+    return FlatButton(
+      padding: EdgeInsets.all(15.0),
+      onPressed: () async {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => PonenciasPage()));
       },
       child: Text(
         text,
