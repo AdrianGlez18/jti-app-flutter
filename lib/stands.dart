@@ -364,7 +364,7 @@ Widget TableMartes() {
         child: Padding(
           padding: EdgeInsets.all(10.0),
           child: Text(
-            ' ',
+            'Binhex Systems Solutions',
             style: TextStyle(fontSize: 20.0),
             textAlign: TextAlign.center,
           ),

@@ -53,7 +53,7 @@ class _PonenciasPageState extends State<PonenciasPage> {
                 child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.53,
                     child: ListView(
-                      children: [Day ? tableShirleyMartes() : TableMiercoles()],
+                      children: [getTable(Day.toString() + room.toString())],
                     ))),
           ],
         ),

@@ -21,13 +21,34 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Image(image: AssetImage('images/logo.png')),
-            Image(
-                image: NetworkImage(
-                    "https://media.istockphoto.com/vectors/qr-code-scan-phone-icon-in-comic-style-scanner-in-smartphone-vector-vector-id1166145556")),
-            flatButton("Visita nuestra web", WebPage()),
-            standButton("Distribución de Stands"),
-            ponenciaButton("Lista de Ponencias"),
+            //Image(
+            //image: NetworkImage(
+            //"https://media.istockphoto.com/vectors/qr-code-scan-phone-icon-in-comic-style-scanner-in-smartphone-vector-vector-id1166145556")),
+            Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Image(image: AssetImage('images/logo.png')),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: flatButton("Visita nuestra web", WebPage()),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: standButton("Distribución de Stands"),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: ponenciaButton("Lista de Ponencias"),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: wifiButton("Acceso al wifi del evento"),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: wifiButton("Créditos"),
+            ),
+
             SizedBox(
               height: 20.0,
             ),
@@ -74,6 +95,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget ponenciaButton(String text) {
+    return FlatButton(
+      padding: EdgeInsets.all(15.0),
+      onPressed: () async {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => PonenciasPage()));
+      },
+      child: Text(
+        text,
+        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+      ),
+      shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.blue, width: 3.0),
+          borderRadius: BorderRadius.circular(20.0)),
+    );
+  }
+
+  Widget wifiButton(String text) {
     return FlatButton(
       padding: EdgeInsets.all(15.0),
       onPressed: () async {

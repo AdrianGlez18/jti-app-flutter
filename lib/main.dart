@@ -4,6 +4,10 @@ import 'package:qrcode/generate.dart';
 import 'package:qrcode/contacts.dart';
 import 'package:qrcode/scan.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
+import 'mainPage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -27,8 +31,11 @@ class _MyAppState extends State<MyApp> {
     ContactsPage()
   ];
 
+  bool consent = false;
+
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () => checkUserConsent());
     return Scaffold(
       appBar: AppBar(
         title: Text("JTI APP"),
@@ -60,4 +67,180 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+
+  void showAlert(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+              title: Text(
+                  "Antes de poder usar la app, debes aceptar nuestra política de privacidad"),
+              content: new InkWell(
+                  child: new Text(
+                    "Ver la política de privacidad",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                  onTap: () =>
+                      launch('https://jtiesit.com/politica-de-privacidad/')),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("Aceptar"),
+                  onPressed: () {
+                    setUserConsent();
+
+                    Navigator.pop(context);
+                  },
+                ),
+                FlatButton(
+                  child: Text("Cerrar la app"),
+                  onPressed: () {
+                    exit(0);
+                  },
+                )
+              ],
+              elevation: 20,
+            ));
+  }
+
+  Future<bool> checkUserConsent() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    /*Future<bool> _saveConsent() async {
+    return await prefs.setBool("consent", consent);
+  }*/
+
+    bool _getConsent() {
+      return prefs.getBool("consent");
+    }
+
+    bool consent = _getConsent() ?? false;
+
+    if (!consent) {
+      showAlert(context);
+    }
+
+    return consent;
+
+    //userdata.add(profile);
+
+    // _saveList();
+  }
+
+  Future<bool> setUserConsent() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    Future<bool> _saveConsent() async {
+      return await prefs.setBool("consent", true);
+    }
+
+    _saveConsent();
+  }
 }
+
+Future<bool> checkUserConsent() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  /*Future<bool> _saveConsent() async {
+    return await prefs.setBool("consent", consent);
+  }*/
+
+  bool _getConsent() {
+    return prefs.getBool("consent");
+  }
+
+  bool consent = _getConsent() ?? false;
+
+  return consent;
+
+  //userdata.add(profile);
+
+  // _saveList();
+}
+
+/*
+
+showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text(
+                                "Antes de poder usar la app, debes aceptar nuestra política de privacidad"),
+                            content: Text("Ver la política de privacidad"),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text("Aceptar"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              FlatButton(
+                                child: Text("Cerrar la app"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                            elevation: 20,
+                          ));
+
+                          */
+
+class ConsentSystem extends StatelessWidget {
+  // Wrapper Widget
+  @override
+  Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () => showAlert(context));
+    return Container(
+      child:
+          Text("Necesitas aceptar la política de privacidad para usar la app"),
+    );
+  }
+
+  void showAlert(BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+              title: Text(
+                  "Antes de poder usar la app, debes aceptar nuestra política de privacidad"),
+              content: Text("Ver la política de privacidad"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("Aceptar"),
+                  onPressed: () {
+                    MyApplication();
+                    Navigator.pop(context);
+                  },
+                ),
+                FlatButton(
+                  child: Text("Cerrar la app"),
+                  onPressed: () {
+                    exit(0);
+                  },
+                )
+              ],
+              elevation: 20,
+            ));
+  }
+}
+
+/*
+
+FutureBuilder<bool>(
+            future: checkUserConsent(), //returns bool
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return new Text('${snapshot.error}');
+                } else {
+                  //
+                  if (snapshot.data == true) {
+                    consent = true;
+                  }
+                  return new CircularProgressIndicator();
+                }
+              } else {
+                return new CircularProgressIndicator();
+              }
+            })
+
+*/
