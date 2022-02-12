@@ -3,6 +3,7 @@ import 'package:qrcode/data/ponencias-shirley.dart';
 import '/data/ponencias-margaret.dart';
 import '/data/ponencias-pilar.dart';
 import '/data/ponencias-frances.dart';
+import '/data/ponencias-salon.dart';
 
 Widget getTable(String tabla) {
   /*
@@ -20,20 +21,24 @@ Widget getTable(String tabla) {
 
   switch (tabla) {
     case 'true0':
-      return tableShirleyMartes();
+      return tableSalonMartes();
     case 'true1':
-      return tableMargaretMartes();
+      return tableShirleyMartes();
     case 'true2':
-      return tablePilarMartes();
+      return tableMargaretMartes();
     case 'true3':
+      return tablePilarMartes();
+    case 'true4':
       return tableFrancesMartes();
     case 'false0':
-      return tableShirleyMiercoles();
+      return tableSalonMiercoles();
     case 'false1':
-      return tableMargaretMiercoles();
+      return tableShirleyMiercoles();
     case 'false2':
-      return tablePilarMiercoles();
+      return tableMargaretMiercoles();
     case 'false3':
+      return tablePilarMiercoles();
+    case 'false4':
       return tableFrancesMiercoles();
     default:
       return tableShirleyMartes();

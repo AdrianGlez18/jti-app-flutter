@@ -51,7 +51,7 @@ class _PonenciasPageState extends State<PonenciasPage> {
             Padding(
                 padding: EdgeInsets.all(15.0),
                 child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.53,
+                    height: MediaQuery.of(context).size.height * 0.50,
                     child: ListView(
                       children: [getTable(Day.toString() + room.toString())],
                     ))),
@@ -64,23 +64,27 @@ class _PonenciasPageState extends State<PonenciasPage> {
   // Room Controller to simplify the conditional statement
   List<Widget> getRoomName() {
     if (room == 0) {
-      return getShirley();
+      return getSalon();
     }
 
     if (room == 1) {
-      return getMargaret();
+      return getShirley();
     }
 
     if (room == 2) {
-      return getPilar();
+      return getMargaret();
     }
 
     if (room == 3) {
+      return getPilar();
+    }
+
+    if (room == 4) {
       return getFrances();
     }
   }
 
-  List<Widget> getShirley() {
+  List<Widget> getSalon() {
     return [
       IconButton(
         icon: const Icon(Icons.arrow_circle_left),
@@ -88,13 +92,13 @@ class _PonenciasPageState extends State<PonenciasPage> {
         color: Color(0xffFF645F),
         onPressed: () {
           setState(() {
-            room = 3;
+            room = 4;
           });
         },
       ),
       SizedBox(
         width: 200,
-        child: Text("Sala Stephanie Shirley",
+        child: Text("Salón Elisa Leonida Zamfirescu (S. de Grados)",
             style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -108,6 +112,40 @@ class _PonenciasPageState extends State<PonenciasPage> {
         onPressed: () {
           setState(() {
             room = 1;
+          });
+        },
+      )
+    ];
+  }
+
+  List<Widget> getShirley() {
+    return [
+      IconButton(
+        icon: const Icon(Icons.arrow_circle_left),
+        tooltip: 'Mostrar sala anterior',
+        color: Color(0xffFF645F),
+        onPressed: () {
+          setState(() {
+            room = 0;
+          });
+        },
+      ),
+      SizedBox(
+        width: 200,
+        child: Text("Sala Stephanie Shirley (1.13)",
+            style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Color(0xffFF645F)),
+            textAlign: TextAlign.center),
+      ),
+      IconButton(
+        icon: const Icon(Icons.arrow_circle_right),
+        tooltip: 'Mostrar sala siguiente',
+        color: Color(0xffFF645F),
+        onPressed: () {
+          setState(() {
+            room = 2;
           });
         },
       )
@@ -122,47 +160,13 @@ class _PonenciasPageState extends State<PonenciasPage> {
         color: Color(0xffFF645F),
         onPressed: () {
           setState(() {
-            room = 0;
-          });
-        },
-      ),
-      SizedBox(
-        width: 200,
-        child: Text("Sala Margaret Heafield Hamilton",
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Color(0xffFF645F)),
-            textAlign: TextAlign.center),
-      ),
-      IconButton(
-        icon: const Icon(Icons.arrow_circle_right),
-        tooltip: 'Mostrar sala siguiente',
-        color: Color(0xffFF645F),
-        onPressed: () {
-          setState(() {
-            room = 2;
-          });
-        },
-      )
-    ];
-  }
-
-  List<Widget> getPilar() {
-    return [
-      IconButton(
-        icon: const Icon(Icons.arrow_circle_left),
-        tooltip: 'Mostrar sala anterior',
-        color: Color(0xffFF645F),
-        onPressed: () {
-          setState(() {
             room = 1;
           });
         },
       ),
       SizedBox(
         width: 200,
-        child: Text("Sala Pilar Careaga Basabe",
+        child: Text("Sala Margaret Heafield Hamilton (1.7)",
             style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -182,7 +186,7 @@ class _PonenciasPageState extends State<PonenciasPage> {
     ];
   }
 
-  List<Widget> getFrances() {
+  List<Widget> getPilar() {
     return [
       IconButton(
         icon: const Icon(Icons.arrow_circle_left),
@@ -196,7 +200,41 @@ class _PonenciasPageState extends State<PonenciasPage> {
       ),
       SizedBox(
         width: 200,
-        child: Text("Sala Frances Elizabeth Allen",
+        child: Text("Sala Pilar Careaga Basabe (2.6)",
+            style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Color(0xffFF645F)),
+            textAlign: TextAlign.center),
+      ),
+      IconButton(
+        icon: const Icon(Icons.arrow_circle_right),
+        tooltip: 'Mostrar sala siguiente',
+        color: Color(0xffFF645F),
+        onPressed: () {
+          setState(() {
+            room = 4;
+          });
+        },
+      )
+    ];
+  }
+
+  List<Widget> getFrances() {
+    return [
+      IconButton(
+        icon: const Icon(Icons.arrow_circle_left),
+        tooltip: 'Mostrar sala anterior',
+        color: Color(0xffFF645F),
+        onPressed: () {
+          setState(() {
+            room = 3;
+          });
+        },
+      ),
+      SizedBox(
+        width: 200,
+        child: Text("Sala Frances Elizabeth Allen (3.6)",
             style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,

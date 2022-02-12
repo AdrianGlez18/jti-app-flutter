@@ -8,8 +8,7 @@ class GeneratePage extends StatefulWidget {
 }
 
 class GeneratePageState extends State<GeneratePage> {
-  String qrData =
-      "https://www.linkedin.com/in/adri%C3%A1n-gonz%C3%A1lez-hern%C3%A1ndez/";
+  String qrData = "QR de ejemplo|||linkedin|||Linkedin de Ejemplo";
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +74,7 @@ class GeneratePageState extends State<GeneratePage> {
                   TextField(
                     controller: qrdataFeedWeb,
                     decoration: InputDecoration(
-                      hintText: "https://www.aglez.dev/",
+                      hintText: "https://www.nombredemiweb.dev/...",
                     ),
                   ),
                   Padding(

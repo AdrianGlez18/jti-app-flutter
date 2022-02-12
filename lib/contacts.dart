@@ -13,6 +13,7 @@ class ContactsPage extends StatefulWidget {
 }
 
 class _ContactsPageState extends State<ContactsPage> {
+  List<String> _contacts = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +48,21 @@ class _ContactsPageState extends State<ContactsPage> {
                   return CircularProgressIndicator();
                 }
 
+                if (snapshot.data.length == 0) {
+                  return SizedBox(
+                    height: 400,
+                    child: Center(
+                      child: Text(
+                        'No hay contactos',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                _contacts = snapshot.data;
                 return new SizedBox(
                     height: 400,
                     child: ListView(
@@ -60,7 +76,11 @@ class _ContactsPageState extends State<ContactsPage> {
               child: FlatButton(
                 padding: EdgeInsets.all(15.0),
                 onPressed: () async {
-                  log("Pressed");
+                  if (_contacts.length == 0) {
+                    log("No hay contactos");
+                  } else {
+                    log("Hay contactos");
+                  }
                 },
                 child: Text(
                   "Exportar Listado a PDF",
@@ -104,13 +124,189 @@ class _ContactsPageState extends State<ContactsPage> {
           borderRadius: BorderRadius.circular(20.0)),
     );
   }
+
+  void _showToastText(BuildContext context, String data) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(data),
+      ),
+    );
+  }
+
+  List<Widget> generateList(List<String> rawData) {
+    List<Widget> list = new List<Widget>();
+
+    for (var i = 0; i < rawData.length; i++) {
+      UserProfile profile = UserProfile(rawData[i]);
+      //log(rawData[i]);
+      //log(UserProfile(rawData[i]).linkedin);
+      if (profile.getIsValid()) {
+        list.add(new Card(
+          color: Color(0xffFF645F),
+          child: Column(children: <Widget>[
+            Container(
+              height: 220,
+              width: 350,
+              color: Color(0xffFF645F),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.all(10.0),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                profile.name,
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                  Center(
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 50.0, right: 15.0),
+                          child: FaIcon(FontAwesomeIcons.linkedin,
+                              color: Colors.white),
+                        ),
+                        SizedBox(
+                          width: 185.0,
+                          child: Text(
+                            () {
+                              if (profile.linkedin.length > 22) {
+                                return profile.linkedin.substring(0, 22) +
+                                    "...";
+                              } else {
+                                return profile.linkedin;
+                              }
+                            }(),
+                            style:
+                                TextStyle(fontSize: 15.0, color: Colors.white),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 5.0, right: 15.0),
+                          child: IconButton(
+                              icon: const Icon(Icons.copy, color: Colors.white),
+                              onPressed: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: profile.linkedin));
+                                _showToastText(
+                                    context, 'Copiado al portapapeles');
+                              }),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Center(
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 50.0, right: 15.0),
+                          child: FaIcon(FontAwesomeIcons.github,
+                              color: Colors.white),
+                        ),
+                        SizedBox(
+                          width: 185.0,
+                          child: Text(
+                            () {
+                              if (profile.github.length > 22) {
+                                return profile.github.substring(0, 22) + "...";
+                              } else {
+                                return profile.github;
+                              }
+                            }(),
+                            style:
+                                TextStyle(fontSize: 15.0, color: Colors.white),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 5.0, right: 15.0),
+                          child: IconButton(
+                              icon: const Icon(Icons.copy, color: Colors.white),
+                              onPressed: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: profile.github));
+                                _showToastText(
+                                    context, 'Copiado al portapapeles');
+                              }),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Center(
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 50.0, right: 15.0),
+                          child: FaIcon(FontAwesomeIcons.link,
+                              color: Colors.white),
+                        ),
+                        SizedBox(
+                          width: 185.0,
+                          child: Text(
+                            () {
+                              if (profile.web.length > 22) {
+                                return profile.web.substring(0, 22) + "...";
+                              } else {
+                                return profile.web;
+                              }
+                            }(),
+                            style:
+                                TextStyle(fontSize: 15.0, color: Colors.white),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 5.0, right: 15.0),
+                          child: IconButton(
+                              icon: const Icon(Icons.copy, color: Colors.white),
+                              onPressed: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: profile.web));
+                                _showToastText(
+                                    context, 'Copiado al portapapeles');
+                              }),
+                        ),
+                      ],
+                    ),
+                  ),
+                  /*Text(
+                profile.linkedin.substring(0, 15) ?? "No disponible",
+                style: TextStyle(fontSize: 20.0),
+              ),*/
+                ],
+              ),
+            )
+          ]),
+        ));
+      }
+    }
+    return list;
+  }
 }
 
 Future<List<String>> getUserData() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   List<String> userdata = prefs.getStringList("key");
   //return userdata[0] ?? "No se ha leído el QR";
-  return userdata ?? ["No se ha leído el QR"];
+  return userdata ?? [];
 }
 
 /*List<Widget> generateList(List<String> rawData) {
@@ -140,150 +336,6 @@ Future<List<String>> getUserData() async {
   }
   return list;
 }*/
-
-List<Widget> generateList(List<String> rawData) {
-  List<Widget> list = new List<Widget>();
-
-  for (var i = 0; i < rawData.length; i++) {
-    UserProfile profile = UserProfile(rawData[i]);
-    //log(rawData[i]);
-    //log(UserProfile(rawData[i]).linkedin);
-    list.add(new Card(
-      color: Color(0xffFF645F),
-      child: Column(children: <Widget>[
-        Container(
-          height: 220,
-          width: 350,
-          color: Color(0xffFF645F),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Icon(
-                            Icons.person,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Text(
-                            profile.name,
-                            style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
-              Center(
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 50.0, right: 15.0),
-                      child: FaIcon(FontAwesomeIcons.linkedin,
-                          color: Colors.white),
-                    ),
-                    Text(
-                      () {
-                        if (profile.linkedin.length > 25) {
-                          return profile.linkedin.substring(0, 25) + "...";
-                        } else {
-                          return profile.linkedin;
-                        }
-                      }(),
-                      style: TextStyle(fontSize: 15.0, color: Colors.white),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 5.0, right: 15.0),
-                      child: IconButton(
-                          icon: const Icon(Icons.copy, color: Colors.white),
-                          onPressed: () {
-                            Clipboard.setData(
-                                ClipboardData(text: profile.linkedin));
-                          }),
-                    ),
-                  ],
-                ),
-              ),
-              Center(
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 50.0, right: 15.0),
-                      child:
-                          FaIcon(FontAwesomeIcons.github, color: Colors.white),
-                    ),
-                    Text(
-                      () {
-                        if (profile.github.length > 25) {
-                          return profile.github.substring(0, 25) + "...";
-                        } else {
-                          return profile.github;
-                        }
-                      }(),
-                      style: TextStyle(fontSize: 15.0, color: Colors.white),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 50.0, right: 15.0),
-                      child: IconButton(
-                          icon: const Icon(Icons.copy, color: Colors.white),
-                          onPressed: () {
-                            Clipboard.setData(
-                                ClipboardData(text: profile.github));
-                          }),
-                    ),
-                  ],
-                ),
-              ),
-              Center(
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 50.0, right: 15.0),
-                      child: FaIcon(FontAwesomeIcons.link, color: Colors.white),
-                    ),
-                    Text(
-                      () {
-                        if (profile.web.length > 25) {
-                          return profile.web.substring(0, 25) + "...";
-                        } else {
-                          return profile.web;
-                        }
-                      }(),
-                      style: TextStyle(fontSize: 15.0, color: Colors.white),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 160.0, right: 15.0),
-                      child: IconButton(
-                          icon: const Icon(Icons.copy, color: Colors.white),
-                          onPressed: () {
-                            Clipboard.setData(ClipboardData(text: profile.web));
-                          }),
-                    ),
-                  ],
-                ),
-              ),
-              /*Text(
-                profile.linkedin.substring(0, 15) ?? "No disponible",
-                style: TextStyle(fontSize: 20.0),
-              ),*/
-            ],
-          ),
-        )
-      ]),
-    ));
-  }
-  return list;
-}
 
 Widget getIcon(String data) {
   if (data.split("|||")[0] == "linkedin") {
@@ -324,6 +376,7 @@ class UserProfile {
   String linkedin;
   String github;
   String web;
+  bool isValid = true;
 
   UserProfile(this.rawData) {
     //log(this.rawData);
@@ -342,6 +395,7 @@ class UserProfile {
         this.web = data[2];
       }
     } else {
+      this.isValid = false;
       this.linkedin = "No disponible";
       this.github = "No disponible";
       this.web = "No disponible";
@@ -361,6 +415,10 @@ class UserProfile {
         this.web = data[6];
       }
     }
+  }
+
+  getIsValid() {
+    return this.isValid;
   }
 }
 
@@ -426,3 +484,5 @@ class _ProfileListState extends State<ProfileList> {
   }
 }
 */
+
+

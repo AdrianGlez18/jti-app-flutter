@@ -44,6 +44,8 @@ class _ScanPageState extends State<ScanPage> {
                 });
 
                 if (qrCodeResult != "No se ha leído el QR" &&
+                    qrCodeResult !=
+                        "QR de ejemplo|||linkedin|||Linkedin de Ejemplo" &&
                     qrCodeResult != "") {
                   showDialog(
                       context: context,
@@ -58,13 +60,25 @@ class _ScanPageState extends State<ScanPage> {
                                   Navigator.pop(context);
                                 },
                               ),
-                              /*FlatButton(
-                              child: Text("Guardar como Linkedin"),
-                              onPressed: () {
-                                storeUserData("linkedin", qrCodeResult);
-                                Navigator.pop(context);
-                              },
-                            ),*/
+                              FlatButton(
+                                child: Text("Descartar"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                            elevation: 20,
+                          ));
+                } else if (qrCodeResult ==
+                        "QR de ejemplo|||linkedin|||Linkedin de Ejemplo" ||
+                    qrCodeResult != "") {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text("Este es el ejemplo de QR"),
+                            content: Text(
+                                "El QR leído es el por defecto. El usuario no ha generado correctamente su QR."),
+                            actions: <Widget>[
                               FlatButton(
                                 child: Text("Descartar"),
                                 onPressed: () {
