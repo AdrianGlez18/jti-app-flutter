@@ -3,6 +3,8 @@ import 'package:qrcode/web.dart';
 import 'web_view_container.dart';
 import 'package:qrcode/stands.dart';
 import 'package:qrcode/ponencias.dart';
+import 'package:qrcode/creditos.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -46,7 +48,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(
               padding: EdgeInsets.all(10.0),
-              child: wifiButton("Créditos"),
+              child: creditsButton("Créditos"),
             ),
 
             SizedBox(
@@ -111,12 +113,28 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget wifiButton(String text) {
+  Widget creditsButton(String text) {
     return FlatButton(
       padding: EdgeInsets.all(15.0),
       onPressed: () async {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => PonenciasPage()));
+            .push(MaterialPageRoute(builder: (context) => CreditsPage()));
+      },
+      child: Text(
+        text,
+        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+      ),
+      shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.blue, width: 3.0),
+          borderRadius: BorderRadius.circular(20.0)),
+    );
+  }
+
+  Widget wifiButton(String text) {
+    return FlatButton(
+      padding: EdgeInsets.all(15.0),
+      onPressed: () async {
+        launch('https://www.ull.es/apps/wifiguest/invitado/2821/JTIwifi');
       },
       child: Text(
         text,

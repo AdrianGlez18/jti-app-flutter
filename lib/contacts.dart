@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
+import 'dart:typed_data';
 
 import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'scripts/savepdf.dart';
 
 class ContactsPage extends StatefulWidget {
   @override
@@ -68,7 +70,6 @@ class _ContactsPageState extends State<ContactsPage> {
                     child: ListView(
                         shrinkWrap: true,
                         children: generateList(snapshot.data)));
-                // embeddedImage: AssetImage('assets/logo.png'),
               },
             ),
             Padding(
@@ -77,9 +78,9 @@ class _ContactsPageState extends State<ContactsPage> {
                 padding: EdgeInsets.all(15.0),
                 onPressed: () async {
                   if (_contacts.length == 0) {
-                    log("No hay contactos");
+                    _showToastText(context, "No hay contactos");
                   } else {
-                    log("Hay contactos");
+                    _generatePDF();
                   }
                 },
                 child: Text(
@@ -100,13 +101,51 @@ class _ContactsPageState extends State<ContactsPage> {
     );
   }
 
-/*class _ContactsPageState extends State<ContactsPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ProfileList(),
-    );
-  }*/
+  Future<void> _generatePDF() async {
+    PdfDocument document = PdfDocument();
+    final page = document.pages.add();
+
+    await page.graphics.drawImage(PdfBitmap(await _readImageData('logo.png')),
+        Rect.fromLTWH(0, 0, 500, 80));
+
+    page.graphics.drawString(
+        'Lista de Contactos', PdfStandardFont(PdfFontFamily.helvetica, 30),
+        brush: PdfSolidBrush(PdfColor(99, 60, 174)),
+        bounds: Rect.fromLTWH(135, 120, 0, 0));
+
+    PdfGrid grid = PdfGrid();
+    grid.style = PdfGridStyle(
+        font: PdfStandardFont(PdfFontFamily.helvetica, 10),
+        cellPadding: PdfPaddings(left: 5, right: 5, top: 5, bottom: 5));
+
+    grid.columns.add(count: 4);
+    grid.headers.add(1);
+
+    PdfGridRow header = grid.headers[0];
+    header.cells[0].value = 'Nombre';
+    header.cells[1].value = 'Linkedin';
+    header.cells[2].value = 'Github';
+    header.cells[3].value = 'Web';
+
+    for (int i = 0; i < _contacts.length; i++) {
+      UserProfile profile = UserProfile(_contacts[i]);
+
+      PdfGridRow row = grid.rows.add();
+      row.cells[0].value = profile.name;
+      row.cells[1].value = profile.linkedin;
+      row.cells[2].value = profile.github;
+      row.cells[3].value = profile.web;
+    }
+
+    if (_contacts.length > 0) {
+      grid.draw(page: page, bounds: const Rect.fromLTWH(0, 200, 0, 0));
+    }
+
+    List<int> bytes = document.save();
+    document.dispose();
+
+    saveAndOpenFile(bytes, 'jti-contactos.pdf');
+  }
 
   Widget flatButton(String text, Widget widget) {
     return FlatButton(
@@ -139,8 +178,6 @@ class _ContactsPageState extends State<ContactsPage> {
 
     for (var i = 0; i < rawData.length; i++) {
       UserProfile profile = UserProfile(rawData[i]);
-      //log(rawData[i]);
-      //log(UserProfile(rawData[i]).linkedin);
       if (profile.getIsValid()) {
         list.add(new Card(
           color: Color(0xffFF645F),
@@ -309,34 +346,6 @@ Future<List<String>> getUserData() async {
   return userdata ?? [];
 }
 
-/*List<Widget> generateList(List<String> rawData) {
-  List<Widget> list = new List<Widget>();
-  for (var i = 0; i < rawData.length; i++) {
-    list.add(new FittedBox(
-        fit: BoxFit.fitWidth,
-        child: Row(
-          children: <Widget>[
-            new IconButton(
-                icon: getIcon(rawData[i]),
-                onPressed: () {
-                  /*Clipboard.setData(
-                      ClipboardData(text: rawData[i].split("|||")[1]));*/
-                  print("Enlace copiado al portapapeles");
-                }),
-            new FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                rawData[i].split("|||")[
-                    1], //Usa únicamente el texto de enlace sin el id de tipo
-                style: TextStyle(fontSize: 20.0),
-              ),
-            )
-          ],
-        )));
-  }
-  return list;
-}*/
-
 Widget getIcon(String data) {
   if (data.split("|||")[0] == "linkedin") {
     return FaIcon(FontAwesomeIcons.linkedin);
@@ -345,30 +354,6 @@ Widget getIcon(String data) {
   }
   return FaIcon(FontAwesomeIcons.link);
 }
-
-/*
-
-list.add(new Row(
-      children: <Widget>[
-        new IconButton(
-            icon: getIcon(rawData[i]),
-            onPressed: () {
-              Clipboard.setData(
-                  ClipboardData(text: rawData[i].split("|||")[1]));
-              print("Enlace copiado al portapapeles");
-            }),
-        new FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            rawData[i].split(
-                "|||")[1], //Usa únicamente el texto de enlace sin el id de tipo
-            style: TextStyle(fontSize: 20.0),
-          ),
-        )
-      ],
-    ));
-
-    */
 
 class UserProfile {
   String rawData;
@@ -379,10 +364,13 @@ class UserProfile {
   bool isValid = true;
 
   UserProfile(this.rawData) {
-    //log(this.rawData);
     List<String> data = this.rawData.split("|||");
-    log(data.toString());
+    //log(data.toString());
     name = data[0];
+
+    this.linkedin = "No disponible";
+    this.github = "No disponible";
+    this.web = "No disponible";
 
     if (data.length > 1) {
       if (data[1] == "linkedin") {
@@ -422,67 +410,11 @@ class UserProfile {
   }
 }
 
-/*class ProfileCard extends StatelessWidget {
-  final UserProfile profile;
-  ProfileCard(this.profile);
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-        child: Container(
-      height: 150,
-      width: 350,
-      color: Color(0xFF645F),
-      child: Column(
-        children: <Widget>[
-          Text(
-            profile.name,
-            style: TextStyle(fontSize: 20.0),
-          ),
-          Text(
-            profile.linkedin.substring(0, 15),
-            style: TextStyle(fontSize: 20.0),
-          ),
-          Text(
-            profile.github.substring(0, 15),
-            style: TextStyle(fontSize: 20.0),
-          ),
-          Text(
-            profile.web.substring(0, 15),
-            style: TextStyle(fontSize: 20.0),
-          ),
-        ],
-      ),
-    ));
-  }
+/*Future<Uint8List> _readImageData(String filename) async {
+  final data = await rootBundle.load('/ìmages/$filename');
+  return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 }*/
-
-/*class ProfileList extends StatefulWidget {
-  @override
-  _ProfileListState createState() => _ProfileListState();
+Future<Uint8List> _readImageData(String name) async {
+  final data = await rootBundle.load('images/$name');
+  return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 }
-
-class _ProfileListState extends State<ProfileList> {
-  Future<List<String>> userData = getUserData();
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) {
-        return FutureBuilder<List<String>>(
-          future: userData,
-          builder: (_, snapshot) {
-            if (!snapshot.hasData) {
-              // Return something to show the future hasn't completed yet
-              return CircularProgressIndicator();
-            }
-
-            return new ProfileCard(new UserProfile(snapshot.data[index]));
-            // embeddedImage: AssetImage('assets/logo.png'),
-          },
-        );
-      },
-    );
-  }
-}
-*/
-
-
